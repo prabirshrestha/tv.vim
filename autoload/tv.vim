@@ -50,8 +50,12 @@ function! s:exit_cb(ctx, job, st, ...) abort
     call a:ctx['options']['accept'](l:params)
   else
     if has_key(a:ctx, 'actions')
-      let l:action = l:items[0]
-      let l:items = l:items[1:]
+      if len(l:items) == 1
+        let l:action = ''
+      else
+        let l:action = l:items[0]
+        let l:items = l:items[1:]
+      endif
     else
       let l:action = ''
     endif
@@ -90,11 +94,11 @@ function! s:exit_cb(ctx, job, st, ...) abort
   endif
 endfunction
 
-function! s:get_fzcmd_options(ctx) abort
+function! s:get_tvcmd_options(ctx) abort
   " should include empty space if it contains options
-  let l:actions = get(a:ctx['options'], 'actions', g:fz_command_actions)
+  let l:actions = get(a:ctx['options'], 'actions', g:tv_command_actions)
   if !empty(l:actions)
-    let l:options_action = get(a:ctx['options'], 'options_action', g:fz_command_options_action)
+    let l:options_action = get(a:ctx['options'], 'options_action', g:tv_command_options_action)
     if l:options_action == ''
       return ''
     endif
@@ -104,9 +108,9 @@ function! s:get_fzcmd_options(ctx) abort
   return ''
 endfunction
 
-function! fz#run(...)
+function! tv#run(...)
   if !s:is_nvim && !has('patch-8.0.928')
-    echohl ErrorMsg | echo "vim-fz doesn't work on legacy vim" | echohl None
+    echohl ErrorMsg | echo "tv.vim doesn't work on legacy vim" | echohl None
     return
   endif
 
@@ -133,7 +137,7 @@ function! fz#run(...)
   let l:typ = get(l:ctx['options'], 'type', 'cmd')
   let l:pipe_cmd = ''
   if l:typ ==# 'cmd'
-    let l:fz_command = get(l:ctx['options'], 'fz_command', g:fz_command)
+    let l:tv_command = get(l:ctx['options'], 'tv_command', g:tv_command)
     if has_key(l:ctx['options'], 'cmd')
         let l:pipe_cmd = l:ctx['options']['cmd'] . ' | '
     endif
@@ -160,23 +164,23 @@ function! fz#run(...)
     return
   endif
   let l:ctx['tmp_result'] = tempname()
-  let l:fz_command = get(l:ctx['options'], 'fz_command', g:fz_command)
-  let l:fz_options = s:get_fzcmd_options(l:ctx)
+  let l:tv_command = get(l:ctx['options'], 'tv_command', g:tv_command)
+  let l:tv_options = s:get_tvcmd_options(l:ctx)
   if has_key(l:ctx, 'tmp_input')
     if s:is_win
-      let l:cmd = printf('%s %s "%s%s <%s >%s"', &shell, &shellcmdflag, l:fz_command, l:fz_options, l:ctx['tmp_input'], l:ctx['tmp_result'])
+      let l:cmd = printf('%s %s "%s%s <%s >%s"', &shell, &shellcmdflag, l:tv_command, l:tv_options, l:ctx['tmp_input'], l:ctx['tmp_result'])
     else
-      let l:cmd = [&shell, &shellcmdflag, printf('%s%s > %s < %s', l:fz_command, l:fz_options, l:ctx['tmp_result'], l:ctx['tmp_input'])]
+      let l:cmd = [&shell, &shellcmdflag, printf('%s%s > %s < %s', l:tv_command, l:tv_options, l:ctx['tmp_result'], l:ctx['tmp_input'])]
     endif
   else
-    let l:cmd = [&shell, &shellcmdflag, printf('%s%s%s > %s', l:pipe_cmd, l:fz_command, l:fz_options, l:ctx['tmp_result'])]
+    let l:cmd = [&shell, &shellcmdflag, printf('%s%s%s > %s', l:pipe_cmd, l:tv_command, l:tv_options, l:ctx['tmp_result'])]
   endif
   botright new
   let l:ctx['buf'] = bufnr('%')
   if s:is_nvim
-    call termopen(l:cmd, {'on_exit': function('s:exit_cb', [l:ctx]), 'cwd': l:ctx['basepath']}) | startinsert
+    call termopen(l:cmd, {'on_exit': function('s:exit_cb', [l:ctx]), 'cwd': l:ctx['basepath']}) | startinsert | set nonumber
   else
-    call term_start(l:cmd, {'term_name': 'Fz', 'curwin': l:ctx['buf'] > 0, 'exit_cb': function('s:exit_cb', [l:ctx]), 'tty_type': 'conpty', 'cwd': l:ctx['basepath']})
+    call term_start(l:cmd, {'term_name': 'Television', 'curwin': l:ctx['buf'] > 0, 'exit_cb': function('s:exit_cb', [l:ctx]), 'tty_type': 'conpty', 'cwd': l:ctx['basepath']})
   endif
   if has_key(l:ctx['options'], 'message')
     echo l:ctx['options']['message']

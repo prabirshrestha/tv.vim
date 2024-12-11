@@ -1,15 +1,13 @@
-# vim-fz
+# tv.vim
 
-Ultra Fast Fuzzy finder for Vim8 and NeoVim.
+Ultra Fast Fuzzy finder for Vim8 and NeoVim for [Television](https://github.com/alexpasmantier/television).
 
 But very very experimental!
-
-![Fz](https://raw.githubusercontent.com/mattn/vim-fz/master/screenshot.gif)
 
 ## Usage
 
 ```
-:Fz
+:Tv
 ```
 
 Or type `,f`
@@ -20,14 +18,14 @@ Or type `,f`
 
 ```vim
 nnoremap <C-p> :execute system('git rev-parse --is-inside-work-tree') =~ 'true'
-      \ ? fz#run({ 'type': 'cmd', 'cmd': 'git ls-files' })
-      \ : 'Fz'<CR>
+      \ ? tv#run({ 'type': 'cmd', 'cmd': 'git ls-files' })
+      \ : 'Tv'<CR>
 ```
 
 ### type: list
 
 ```vim
-command! FzColors call fz#run({
+command! TvColors call tv#run({
     \ 'type': 'list',
     \ 'list': uniq(map(split(globpath(&rtp, "colors/*.vim"), "\n"), "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')")),
     \ 'accept': {result->execute('colorscheme ' . result['items'][0])},
@@ -36,21 +34,22 @@ command! FzColors call fz#run({
 
 ## Requirements
 
-* [gof](https://github.com/mattn/gof)
 * vim8 or neovim
 
 ## Installation
 
+Install television binary from https://github.com/alexpasmantier/television/releases or use homebrew for Mac.
+
 ```
-$ go get github.com/mattn/gof
+$ brew install television
 ```
 
 *  [Pathogen](https://github.com/tpope/vim-pathogen)
-    * `git clone https://github.com/mattn/vim-fz.git ~/.vim/bundle/vim-fz`
+    * `git clone https://github.com/prabirshrestha/tv.vim.git ~/.vim/bundle/tv.vim`
 *  [vim-plug](https://github.com/junegunn/vim-plug)
-    * `Plug 'mattn/vim-fz'`
+    * `Plug 'prabirshrestha/tv.vim'`
 *  [Vim packages](http://vimhelp.appspot.com/repeat.txt.html#packages)
-    * `git clone https://github.com/mattn/vim-fz.git ~/.vim/pack/plugins/start/vim-fz`
+    * `git clone https://github.com/prabirshrestha/tv.vim.git ~/.vim/pack/plugins/start/tv.vim`
 
 ## License
 
@@ -58,4 +57,8 @@ MIT
 
 ## Author
 
-Yasuhiro Matsumoto (a.k.a. mattn)
+Prabir Shrestha
+
+## Credits
+
+This is heavily inspired by [vim-fz](https://github.com/mattn/vim-fz)
