@@ -6,7 +6,9 @@ Ultra Fast Fuzzy finder for Vim8 and NeoVim for [Television](https://github.com/
 
 It is inspired by the neovim [telescope](https://github.com/nvim-telescope/telescope.nvim) plugin and is designed to be fast, efficient, simple to use and easily extensible. It is built on top of [tokio](https://github.com/tokio-rs/tokio), [ratatui](https://github.com/ratatui/ratatui) and the *nucleo* matcher used by the [helix](https://github.com/helix-editor/helix) editor.
 
-But very very experimental and some of the apis might not work yet and may change.
+But very very experimental and some of the apis might not work yet and may change!
+
+![tv.vim](https://github.com/user-attachments/assets/c2a1dc2a-55d0-4b7b-9ac9-f04a5ac0cb33)
 
 ## Usage
 
