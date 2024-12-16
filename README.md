@@ -41,6 +41,7 @@ command! TvColors call tv#run({
 ## Requirements
 
 * vim8 or neovim
+* [tv](https://github.com/alexpasmantier/television) binary v0.7.0 or later.
 
 ## Installation
 
