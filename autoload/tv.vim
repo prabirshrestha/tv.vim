@@ -38,12 +38,18 @@ function! s:exit_cb(ctx, job, st, ...) abort
     let l:params = {}
     if has_key(a:ctx, 'actions')
       let l:params['actions'] = a:ctx['actions']
-      if has_key(l:params['actions'], l:items[0])
-        let l:params['action'] = l:params['actions'][l:items[0]]
+      if len(l:items) == 1
+        let l:action = ''
       else
-        let l:params['action'] = l:items[0]
+        let l:action = l:items[0]
+        let l:items = l:items[1:]
       endif
-      let l:params['items'] = l:items[1:]
+      if has_key(l:params['actions'], l:action)
+        let l:params['action'] = l:params['actions'][l:action]
+      else
+        let l:params['action'] = l:action
+      endif
+      let l:params['items'] = l:items
     else
       let l:params['items'] = l:items
     endif
