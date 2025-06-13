@@ -1,6 +1,12 @@
 let s:is_nvim = has('nvim')
 let s:is_win = has('win32') || has('win64')
 
+" do nothing, place it here only to avoid the message
+augroup _tv_silent_
+  autocmd!
+  autocmd User tv_terminal_created silent
+augroup END
+
 function! s:absolute_path(path) abort
   if has('win32')
     return a:path =~# '^\([/\\]\|[a-zA-Z]:[/\\]\)'
@@ -102,15 +108,16 @@ endfunction
 
 function! s:get_tvcmd_options(ctx) abort
   " should include empty space if it contains options
-  let l:actions = get(a:ctx['options'], 'actions', g:tv_command_actions)
-  if !empty(l:actions)
-    let l:options_action = get(a:ctx['options'], 'options_action', g:tv_command_options_action)
-    if l:options_action == ''
-      return ''
-    endif
-    let a:ctx['actions'] = l:actions
-    return ' ' . printf(l:options_action, join(keys(l:actions), ','))
-  endif
+  " let l:actions = get(a:ctx['options'], 'actions', g:tv_command_actions)
+  " if !empty(l:actions)
+  "   let l:options_action = get(a:ctx['options'], 'options_action', g:tv_command_options_action)
+  "   if l:options_action == ''
+  "     return ''
+  "   endif
+  "   let a:ctx['actions'] = l:actions
+  "   return ' ' . printf(l:options_action, join(keys(l:actions), ','))
+  " endif
+  " TODO: for now always return empty string due to https://github.com/alexpasmantier/television/issues/468
   return ''
 endfunction
 
@@ -188,7 +195,10 @@ function! tv#run(...)
   else
     call term_start(l:cmd, {'term_name': 'Television', 'curwin': l:ctx['buf'] > 0, 'exit_cb': function('s:exit_cb', [l:ctx]), 'tty_type': 'conpty', 'cwd': l:ctx['basepath']})
   endif
+
   if has_key(l:ctx['options'], 'message')
     echo l:ctx['options']['message']
   endif
+
+  execute('doautocmd <nomodeline> User tv_terminal_created')
 endfunction
