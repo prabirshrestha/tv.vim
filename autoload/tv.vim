@@ -59,7 +59,7 @@ function! s:exit_cb(ctx, job, st, ...) abort
       if len(l:items) == 1
         let l:action = ''
       else
-        let l:action = l:items[0]
+        let l:action = tolower(l:items[0])
         let l:items = l:items[1:]
       endif
     else
@@ -109,7 +109,8 @@ function! s:get_tvcmd_options(ctx) abort
       return ''
     endif
     let a:ctx['actions'] = l:actions
-    return ' ' . printf(l:options_action, join(keys(l:actions), ','))
+    let l:args = ' ' . printf(l:options_action, join(keys(l:actions), ';'))
+    return l:args
   endif
   return ''
 endfunction
