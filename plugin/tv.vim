@@ -4,7 +4,7 @@ endif
 let g:tv_loaded = 1
 
 let g:tv_command = get(g:, 'tv_command', 'tv')
-let g:tv_command_options_action = get(g:, 'tv_command_options_action', '--passthrough-keybindings=%s')
+let g:tv_command_options_action = get(g:, 'tv_command_options_action', "--expect '%s'")
 let g:tv_command_actions = {
   \ 'ctrl-o': 'edit',
   \ 'ctrl-t': 'tab split',
