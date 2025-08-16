@@ -59,7 +59,7 @@ function! s:exit_cb(ctx, job, st, ...) abort
       if len(l:items) == 1
         let l:action = ''
       else
-        let l:action = tolower(l:items[0])
+        let l:action = l:items[0]
         let l:items = l:items[1:]
       endif
     else
